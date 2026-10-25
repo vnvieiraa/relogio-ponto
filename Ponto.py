@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 
+# Repositório: https://github.com/vnvieiraa/relogio-ponto
+
 # Banco de dados
 conexao = sqlite3.connect("ponto.db")
 cursor = conexao.cursor()
