@@ -115,3 +115,91 @@ def executar():
 
 if __name__ == "__main__":
     executar()
+
+ # Sistema de cálculo do INSS - Tabela 2026
+
+
+def calcular_inss(salario):
+    if salario < 0:
+        raise ValueError("O salário não pode ser negativo.")
+
+    # Faixas progressivas de contribuição
+    faixas = [
+        (1621.00, 0.075),
+        (2902.84, 0.09),
+        (4354.27, 0.12),
+        (8475.55, 0.14)
+    ]
+
+    desconto = 0.0
+    limite_anterior = 0.0
+
+    for limite, aliquota in faixas:
+        if salario > limite_anterior:
+            parcela = min(salario, limite) - limite_anterior
+            desconto += parcela * aliquota
+            limite_anterior = limite
+
+        if salario <= limite:
+            break
+
+    return round(desconto, 2)
+
+
+def main():
+    print("=" * 40)
+    print(" SISTEMA TRABALHISTA - INSS 2026")
+    print("=" * 40)
+
+    try:
+        salario = float(
+            input("Digite o salário bruto (R$): ")
+            .replace(",", ".")
+        )
+
+        if salario < 0:
+            print("Erro: informe um salário válido.")
+            return
+
+        inss = calcular_inss(salario)
+        salario_liquido = salario - inss
+
+        print("\n--- RESULTADO DO CÁLCULO ---")
+        print(f"Salário bruto: R$ {salario:.2f}")
+        print(f"Desconto INSS: R$ {inss:.2f}")
+        print(f"Salário após INSS: R$ {salario_liquido:.2f}")
+        print("=" * 40)
+
+    except ValueError:
+        print("Erro: digite um valor numérico válido.")
+
+
+if __name__ == "__main__":
+    main()
+
+    # Calculadora de FGTS - 2026
+
+
+def calcular_fgts(salario, tipo_contrato="clt"):
+    if salario < 0:
+        raise ValueError("O salário não pode ser negativo.")
+
+    tipo_contrato = tipo_contrato.lower()
+
+    if tipo_contrato == "clt":
+        aliquota = 0.08
+    elif tipo_contrato == "aprendiz":
+        aliquota = 0.02
+    else:
+        raise ValueError("Use 'clt' ou 'aprendiz'.")
+
+    return round(salario * aliquota, 2)
+
+
+salario = float(input("Digite o salário bruto: R$ ").replace(",", "."))
+tipo = input("Tipo de contrato (clt ou aprendiz): ")
+
+fgts = calcular_fgts(salario, tipo)
+
+print(f"Salário bruto: R$ {salario:.2f}")
+print(f"Depósito mensal do FGTS: R$ {fgts:.2f}")
